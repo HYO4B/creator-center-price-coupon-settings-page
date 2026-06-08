@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Creator Center Price & Coupon Settings</title>
+  <style>
+    :root {
+      --bg: #f4f4f4;
+      --panel: #fff;
+      --soft: #f8f8f8;
+      --line: #e9e9e9;
+      --line-2: #d9d9d9;
+      --text: #171717;
+      --muted: #747474;
+      --weak: #a3a3a3;
+      --green: #0f9f6e;
+      --green-bg: #eaf8f2;
+      --purple: #8b3dff;
+      --purple-bg: #f4edff;
+      --blue: #2563eb;
+      --blue-bg: #eff6ff;
+      --orange: #d97706;
+      --orange-bg: #fff7ed;
+      --red: #dc2626;
+      --red-bg: #fef2f2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #cfcfcf;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", sans-serif;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .app-frame {
+      width: min(1280px, calc(100vw - 48px));
+      min-height: 760px;
+      margin: 42px auto;
+      border-radius: 10px;
+      background: var(--bg);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, .14);
+      overflow: hidden;
+    }
+
+    .topbar {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 26px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 0;
+      background: transparent;
+      color: #111;
+      font-size: 18px;
+      font-weight: 850;
+      letter-spacing: -.03em;
+    }
+
+    .device-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fafafa;
+    }
+
+    .device-toggle span {
+      min-width: 38px;
+      height: 24px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      color: #777;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .device-toggle .active {
+      background: #111;
+      color: #fff;
+    }
+
+    .btn-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      height: 36px;
+      border: 1px solid var(--line-2);
+      border-radius: 8px;
+      background: #fff;
+      color: #333;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 14px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .btn.primary {
+      background: #111;
+      border-color: #111;
+      color: #fff;
+    }
+
+    .btn.disabled {
+      background: #efefef;
+      color: #aaa;
+      border-color: #efefef;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr) 300px;
+      min-height: 690px;
+    }
+
+    .sidebar {
+      padding: 44px 28px;
+      border-right: 1px solid var(--line);
+      background: #f7f7f7;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 44px;
+      color: #555;
+      font-weight: 850;
+    }
+
+    .step + .step { margin-top: 6px; }
+
+    .step-dot {
+      width: 14px;
+      height: 14px;
+      border: 1px solid #cfcfcf;
+      border-radius: 50%;
+      background: #fff;
+      flex: 0 0 auto;
+    }
+
+    .step.done .step-dot {
+      border: 0;
+      background: var(--green);
+      box-shadow: inset 0 0 0 4px var(--green);
+    }
+
+    .step.active {
+      min-height: 46px;
+      border: 3px solid #a040ff;
+      background: #fff;
+      padding: 0 12px;
+      margin-left: -14px;
+      color: #111;
+    }
+
+    .step-help {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: #555;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 36px;
+      overflow: auto;
+    }
+
+    .canvas-card {
+      max-width: 720px;
+      margin: 0 auto 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 34px 28px 24px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--purple);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-size: 24px;
+      line-height: 1.3;
+      letter-spacing: -.04em;
+    }
+
+    h2 {
+      font-size: 17px;
+      letter-spacing: -.03em;
+    }
+
+    h3 {
+      font-size: 13px;
+      letter-spacing: -.02em;
+    }
+
+    .desc {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .hero .desc {
+      width: min(520px, 100%);
+      margin: 10px auto 0;
+    }
+
+    .tabbar {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      padding: 8px;
+      border-bottom: 1px solid var(--line);
+      background: #fafafa;
+    }
+
+    .tab {
+      height: 40px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: #555;
+      font-weight: 900;
+    }
+
+    .tab.active {
+      background: #111;
+      color: #fff;
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .section {
+      padding: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section:last-child { border-bottom: 0; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .section-title { font-weight: 900; }
+    .section-sub {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      color: #333;
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+
+    .field small {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    input, select {
+      width: 100%;
+      height: 42px;
+      border: 1px solid var(--line-2);
+      border-radius: 9px;
+      background: #fff;
+      color: #222;
+      padding: 0 12px;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: #a040ff;
+      box-shadow: 0 0 0 3px var(--purple-bg);
+    }
+
+    .package-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .package {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) 110px 120px 120px;
+      gap: 10px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .package-name {
+      font-weight: 900;
+      margin-bottom: 3px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .metric-value {
+      margin-top: 3px;
+      font-weight: 900;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 24px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: #555;
+      padding: 2px 9px;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .chip.green { background: var(--green-bg); color: var(--green); }
+    .chip.blue { background: var(--blue-bg); color: var(--blue); }
+    .chip.orange { background: var(--orange-bg); color: var(--orange); }
+    .chip.red { background: var(--red-bg); color: var(--red); }
+
+    .policy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .policy {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      padding: 13px;
+    }
+
+    .policy h3 { margin-bottom: 8px; }
+
+    .read-only-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .read-only-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 14px;
+    }
+
+    .read-only-item.locked-data {
+      background: #fafafa;
+      border-style: dashed;
+    }
+
+    .item-meta {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .coupon-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 14px;
+    }
+
+    .stat-card strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 20px;
+      letter-spacing: -.03em;
+    }
+
+    .progress {
+      height: 8px;
+      border-radius: 999px;
+      background: #eee;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: #ff5a00;
+    }
+
+    .notice {
+      margin-top: 12px;
+      border: 1px solid #fed7aa;
+      border-radius: 10px;
+      background: var(--orange-bg);
+      color: #92400e;
+      padding: 13px;
+      font-size: 12px;
+    }
+
+    .simple-page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 44px 28px 56px;
+    }
+
+    .simple-hero {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .simple-hero h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .simple-flow {
+      display: grid;
+      gap: 16px;
+    }
+
+    .simple-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .simple-left {
+      display: grid;
+      gap: 16px;
+    }
+
+    .simple-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      padding: 24px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+    }
+
+    .simple-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .step-badge {
+      display: inline-grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #111;
+      color: #fff;
+      font-weight: 950;
+      margin-bottom: 10px;
+    }
+
+    .compact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .simple-ticket-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .price-edit-list,
+    .coupon-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .price-edit-row,
+    .coupon-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 120px 110px 120px;
+      gap: 10px;
+      align-items: end;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+    }
+
+    .coupon-row {
+      grid-template-columns: minmax(0, 1.1fr) 120px 120px 120px 34px;
+    }
+
+    .mini-label {
+      display: grid;
+      gap: 6px;
+      color: #555;
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .mini-label input,
+    .mini-label select {
+      height: 38px;
+    }
+
+    .icon-button {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      color: #777;
+      font-weight: 900;
+    }
+
+    .add-row-button {
+      width: 100%;
+      height: 42px;
+      border: 1px dashed #cfcfcf;
+      border-radius: 12px;
+      background: #fafafa;
+      color: #333;
+      font-weight: 900;
+    }
+
+    .safety-note {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      border: 1px solid #fed7aa;
+      border-radius: 12px;
+      background: var(--orange-bg);
+      color: #92400e;
+      padding: 12px;
+      font-size: 12px;
+      margin-top: 12px;
+    }
+
+    .simple-ticket {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .simple-ticket.selected {
+      border-color: #ff5a00;
+      box-shadow: inset 0 0 0 1px #ff5a00;
+    }
+
+    .simple-price {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .formula-preview {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .formula-box {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fafafa;
+      padding: 16px;
+    }
+
+    .formula-box.result {
+      border-color: #ff5a00;
+      background: #fff7ed;
+    }
+
+    .formula-box strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 20px;
+      letter-spacing: -.04em;
+    }
+
+    .simple-note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .preview-side {
+      position: sticky;
+      top: 24px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+    }
+
+    .preview-side h2 {
+      margin-bottom: 14px;
+    }
+
+    .preview-stack {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+      gap: 14px;
+    }
+
+    .buyer-preview,
+    .package-preview {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 18px;
+    }
+
+    .buyer-preview h2,
+    .package-preview h2 {
+      margin-bottom: 14px;
+      font-size: 16px;
+    }
+
+    .ticket-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      min-height: 84px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+
+    .ticket-card.selected {
+      border-color: #ff6a00;
+      box-shadow: inset 0 0 0 1px #ff6a00;
+    }
+
+    .ticket-title {
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing: -.03em;
+    }
+
+    .price-box {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .list-price {
+      color: #7a7a7a;
+      font-size: 14px;
+      text-decoration: line-through;
+    }
+
+    .sale-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .discount {
+      color: #ff5a00;
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .sale-price {
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing: -.03em;
+    }
+
+    .buyer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin: 22px 0 12px;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .package-buyer-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 26px;
+    }
+
+    .buy-summary {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .monthly-price {
+      text-align: right;
+      font-size: 19px;
+      font-weight: 950;
+    }
+
+    .buy-button {
+      width: 100%;
+      height: 52px;
+      border: 0;
+      border-radius: 12px;
+      background: #ff5a00;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 950;
+      margin-top: 14px;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .pill {
+      min-height: 38px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      background: #f5f5f5;
+      padding: 0 16px;
+      font-weight: 900;
+    }
+
+    .pill.active {
+      background: #1f1f1f;
+      color: #fff;
+    }
+
+    .admin-package-card {
+      position: relative;
+      border-radius: 12px;
+      background: #f6f6f6;
+      padding: 14px 44px 14px 16px;
+      margin-bottom: 10px;
+    }
+
+    .admin-package-card.plain {
+      background: #fff;
+    }
+
+    .admin-package-card:after {
+      content: "•••";
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      color: #222;
+      letter-spacing: 1px;
+      font-weight: 900;
+    }
+
+    .package-title-line {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 950;
+      letter-spacing: -.03em;
+    }
+
+    .package-title-line .base {
+      color: #2563eb;
+    }
+
+    .inline-price {
+      margin: 5px 0 14px;
+      color: #333;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .coming-soon {
+      border: 1px dashed #d8d8d8;
+      border-radius: 12px;
+      background: #fafafa;
+      padding: 14px;
+      color: #555;
+    }
+
+    .locked {
+      opacity: .62;
+    }
+
+    .mini-preview {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .mini-preview .ticket-card {
+      min-height: 64px;
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+    .mini-preview .ticket-title,
+    .mini-preview .sale-price,
+    .mini-preview .discount {
+      font-size: 14px;
+    }
+
+    .mini-preview .buy-button {
+      height: 42px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    .right-panel {
+      padding: 24px 16px;
+      border-left: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .right-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      font-weight: 900;
+    }
+
+    .preview-card {
+      min-height: 82px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background:
+        linear-gradient(45deg, #f2f2f2 25%, transparent 25%),
+        linear-gradient(-45deg, #f2f2f2 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #f2f2f2 75%),
+        linear-gradient(-45deg, transparent 75%, #f2f2f2 75%);
+      background-size: 18px 18px;
+      background-position: 0 0, 0 9px, 9px -9px, -9px 0;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .preview-card .preview-content {
+      min-height: 82px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 4px;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,.62), #fff);
+    }
+
+    .preview-title {
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .floating-help {
+      position: fixed;
+      right: max(30px, calc((100vw - 1280px) / 2 + 20px));
+      bottom: 70px;
+      width: 56px;
+      height: 56px;
+      border: 0;
+      border-radius: 50%;
+      background: #ffe600;
+      box-shadow: 0 8px 20px rgba(0,0,0,.22);
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    @media (max-width: 1000px) {
+      .app-frame {
+        width: 100%;
+        min-height: 100vh;
+        margin: 0;
+        border-radius: 0;
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar,
+      .right-panel {
+        border: 0;
+      }
+
+      .sidebar {
+        padding: 18px;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .step {
+        min-height: 40px;
+        justify-content: center;
+        font-size: 11px;
+      }
+
+      .step.active {
+        margin-left: 0;
+      }
+
+      .step-help {
+        display: none;
+      }
+
+      .package,
+      .grid,
+      .compact-grid,
+      .formula-preview,
+      .simple-layout,
+      .price-edit-row,
+      .coupon-row,
+      .policy-grid,
+      .preview-stack,
+      .coupon-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .floating-help { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-frame">
+    <header class="topbar">
+      <button class="back" type="button">← 클래스</button>
+      <div class="btn-row">
+        <button class="btn" type="button">미리보기</button>
+        <button class="btn primary" type="button">저장</button>
+      </div>
+    </header>
+
+    <main class="simple-page">
+      <section class="simple-hero">
+        <div class="eyebrow">Creator Center</div>
+        <h1>가격과 쿠폰을 간단히 설정하세요</h1>
+        <p class="desc">크리에이터는 가격, 쿠폰, 적용 예시만 확인하면 됩니다. 복잡한 정책은 저장 후 백엔드에서 자동으로 처리됩니다.</p>
+      </section>
+
+      <div class="simple-layout">
+        <div class="simple-left">
+          <section class="simple-card">
+            <div class="simple-card-head">
+              <div>
+                <span class="step-badge">1</span>
+                <h2>가격과 할인가 수정하기</h2>
+                <p class="section-sub">수강권별 정가, 할인율, 판매가만 수정합니다.</p>
+              </div>
+              <span class="chip blue">가격 설정</span>
+            </div>
+            <div class="price-edit-list">
+              <div class="price-edit-row">
+                <div>
+                  <div class="ticket-title">20주 수강</div>
+                  <p class="desc">기본 수강권</p>
+                </div>
+                <label class="mini-label">정가<input value="149,400원" /></label>
+                <label class="mini-label">할인율<input value="20%" /></label>
+                <label class="mini-label">판매가<input value="119,600원" /></label>
+              </div>
+              <div class="price-edit-row">
+                <div>
+                  <div class="ticket-title">평생 소장</div>
+                  <p class="desc">소장형 수강권</p>
+                </div>
+                <label class="mini-label">정가<input value="174,700원" /></label>
+                <label class="mini-label">할인율<input value="20%" /></label>
+                <label class="mini-label">판매가<input value="139,800원" /></label>
+              </div>
+            </div>
+            <p class="simple-note">키트/코칭권은 패키지에 포함되어 있으면 고객 화면에 같이 보이지만, 여기서는 수강권 가격만 수정합니다.</p>
+          </section>
+
+          <section class="simple-card">
+            <div class="simple-card-head">
+              <div>
+                <span class="step-badge">2</span>
+                <h2>쿠폰 여러 개 생성하기</h2>
+                <p class="section-sub">% 할인과 고정 금액 할인을 모두 만들 수 있습니다.</p>
+              </div>
+              <span class="chip orange">쿠폰 설정</span>
+            </div>
+            <div class="coupon-list">
+              <div class="coupon-row">
+                <label class="mini-label">쿠폰 이름<input value="런칭 15,000원 쿠폰" /></label>
+                <label class="mini-label">방식<select><option>고정가 할인</option><option>% 할인</option></select></label>
+                <label class="mini-label">할인값<input value="15,000원" /></label>
+                <label class="mini-label">적용 대상<select><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
+                <button class="icon-button" type="button">×</button>
+              </div>
+              <div class="coupon-row">
+                <label class="mini-label">쿠폰 이름<input value="첫 구매 10% 쿠폰" /></label>
+                <label class="mini-label">방식<select><option>% 할인</option><option>고정가 할인</option></select></label>
+                <label class="mini-label">할인값<input value="10%" /></label>
+                <label class="mini-label">적용 대상<select><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
+                <button class="icon-button" type="button">×</button>
+              </div>
+              <button class="add-row-button" type="button">+ 쿠폰 추가</button>
+            </div>
+            <div class="safety-note">
+              <strong>!</strong>
+              <span>쿠폰 적용 후 결제 금액은 최소 9,900원 이상이어야 합니다. 9,900원보다 낮아지는 쿠폰은 저장 시 자동으로 제한됩니다.</span>
+            </div>
+          </section>
+        </div>
+
+        <aside class="preview-side">
+          <div class="simple-card-head">
+            <div>
+              <span class="step-badge">3</span>
+              <h2>적용 예시</h2>
+              <p class="section-sub">고객에게 보이는 가격입니다.</p>
+            </div>
+          </div>
+          <div class="formula-preview" style="grid-template-columns:1fr">
+            <div class="formula-box">
+              <div class="metric-label">정가</div>
+              <strong>149,400원</strong>
+            </div>
+            <div class="formula-box">
+              <div class="metric-label">20% 할인가</div>
+              <strong>119,600원</strong>
+            </div>
+            <div class="formula-box result">
+              <div class="metric-label">15,000원 쿠폰 적용 후</div>
+              <strong>104,600원</strong>
+            </div>
+          </div>
+          <div class="ticket-card selected" style="margin-top:16px;margin-bottom:0">
+            <div>
+              <div class="ticket-title">20주 수강</div>
+              <p class="desc">런칭 15,000원 쿠폰 적용</p>
+            </div>
+            <div class="price-box">
+              <div class="list-price">149,400원</div>
+              <div class="sale-line"><span class="discount">30%</span><span class="sale-price">104,600원</span></div>
+            </div>
+          </div>
+          <p class="simple-note">예시 금액이 9,900원 미만이면 쿠폰 적용이 막힙니다.</p>
+        </aside>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
