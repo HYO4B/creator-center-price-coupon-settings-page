@@ -743,6 +743,44 @@
       font-weight: 800;
     }
 
+    .preview-ticket-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .preview-ticket-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fff;
+    }
+
+    .preview-ticket-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .preview-price-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .preview-price-row strong {
+      color: #111;
+      font-size: 14px;
+    }
+
+    .preview-price-row.final strong {
+      color: #ff5a00;
+      font-size: 18px;
+    }
+
     .preview-stack {
       display: grid;
       grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
@@ -1174,30 +1212,7 @@
             적용할 쿠폰 선택
             <select id="previewCouponSelect"></select>
           </label>
-          <div class="formula-preview" style="grid-template-columns:1fr">
-            <div class="formula-box">
-              <div class="metric-label">정가</div>
-              <strong id="previewListPrice">149,400원</strong>
-            </div>
-            <div class="formula-box">
-              <div class="metric-label" id="previewDiscountLabel">20% 할인가</div>
-              <strong id="previewSalePrice">119,600원</strong>
-            </div>
-            <div class="formula-box result">
-              <div class="metric-label" id="previewCouponLabel">15,000원 쿠폰 적용 후</div>
-              <strong id="previewFinalPrice">104,600원</strong>
-            </div>
-          </div>
-          <div class="ticket-card selected" style="margin-top:16px;margin-bottom:0">
-            <div>
-              <div class="ticket-title" id="previewTicketName">20주 수강</div>
-              <p class="desc" id="previewTicketCoupon">런칭 15,000원 쿠폰 적용</p>
-            </div>
-            <div class="price-box">
-              <div class="list-price" id="previewTicketListPrice">149,400원</div>
-              <div class="sale-line"><span class="discount" id="previewTicketDiscount">30%</span><span class="sale-price" id="previewTicketFinalPrice">104,600원</span></div>
-            </div>
-          </div>
+          <div class="preview-ticket-list" id="previewTicketList"></div>
           <p class="warning-text" id="minimumWarning">최소 결제금액 9,900원이 적용되어 쿠폰 할인이 제한됐습니다.</p>
           <p class="simple-note">예시 금액이 9,900원 미만이면 쿠폰 적용이 막힙니다.</p>
         </aside>
@@ -1209,6 +1224,7 @@
     const couponList = document.querySelector(".coupon-list");
     const addCouponBtn = document.getElementById("addCouponBtn");
     const previewCouponSelect = document.getElementById("previewCouponSelect");
+    const previewTicketList = document.getElementById("previewTicketList");
 
     const money = (value) => Number(String(value || "").replace(/[^\d]/g, "")) || 0;
     const percent = (value) => Number(String(value || "").replace(/[^\d.]/g, "")) || 0;
@@ -1248,14 +1264,13 @@
       }));
     }
 
-    function readFirstTicket() {
-      const row = document.querySelector("[data-ticket-row]");
-      return {
+    function readTickets() {
+      return [...document.querySelectorAll("[data-ticket-row]")].map((row) => ({
         name: row.dataset.ticketName,
         listPrice: money(row.querySelector(".list-price-input").value),
         rate: percent(row.querySelector(".discount-rate-input").value),
         salePrice: money(row.querySelector(".sale-price-input").value),
-      };
+      }));
     }
 
     function applicableCoupons(ticketName) {
@@ -1279,9 +1294,9 @@
       unit.textContent = type === "percent" ? "%" : "원";
     }
 
-    function syncPreviewCouponSelect(ticketName) {
+    function syncPreviewCouponSelect() {
       const previousValue = previewCouponSelect.value;
-      const coupons = applicableCoupons(ticketName);
+      const coupons = readCoupons();
       const options = [
         `<option value="none">쿠폰 적용 안 함</option>`,
         ...coupons.map((coupon) => `<option value="${coupon.id}">${coupon.name} (${couponValueLabel(coupon)})</option>`),
@@ -1295,28 +1310,43 @@
     }
 
     function updatePreview() {
-      const ticket = readFirstTicket();
-      syncPreviewCouponSelect(ticket.name);
-      const coupon = applicableCoupons(ticket.name).find((item) => item.id === previewCouponSelect.value);
-      const couponAmount = couponDiscountAmount(coupon, ticket.salePrice);
-      const rawFinalPrice = ticket.salePrice - couponAmount;
-      const finalPrice = Math.max(MIN_FINAL_PRICE, rawFinalPrice);
-      const totalRate = ticket.listPrice ? (1 - finalPrice / ticket.listPrice) * 100 : 0;
-      const clamped = rawFinalPrice < MIN_FINAL_PRICE;
-      const couponLabel = coupon ? `${couponValueLabel(coupon)} 쿠폰 적용 후` : "쿠폰 없음";
-      const couponDesc = coupon ? `${coupon.name} 적용` : "적용된 쿠폰 없음";
+      syncPreviewCouponSelect();
+      const selectedCoupon = readCoupons().find((item) => item.id === previewCouponSelect.value);
+      let hasClampedPrice = false;
 
-      document.getElementById("previewListPrice").textContent = formatMoney(ticket.listPrice);
-      document.getElementById("previewDiscountLabel").textContent = `${formatPercent(ticket.rate)} 할인가`;
-      document.getElementById("previewSalePrice").textContent = formatMoney(ticket.salePrice);
-      document.getElementById("previewCouponLabel").textContent = couponLabel;
-      document.getElementById("previewFinalPrice").textContent = formatMoney(finalPrice);
-      document.getElementById("previewTicketName").textContent = ticket.name;
-      document.getElementById("previewTicketCoupon").textContent = couponDesc;
-      document.getElementById("previewTicketListPrice").textContent = formatMoney(ticket.listPrice);
-      document.getElementById("previewTicketDiscount").textContent = formatPercent(totalRate);
-      document.getElementById("previewTicketFinalPrice").textContent = formatMoney(finalPrice);
-      document.getElementById("minimumWarning").classList.toggle("show", clamped);
+      previewTicketList.innerHTML = readTickets().map((ticket) => {
+        const couponApplies = selectedCoupon && (selectedCoupon.target === "전체 수강권" || selectedCoupon.target === ticket.name);
+        const couponAmount = couponApplies ? couponDiscountAmount(selectedCoupon, ticket.salePrice) : 0;
+        const rawFinalPrice = ticket.salePrice - couponAmount;
+        const finalPrice = Math.max(MIN_FINAL_PRICE, rawFinalPrice);
+        const totalRate = ticket.listPrice ? (1 - finalPrice / ticket.listPrice) * 100 : 0;
+        const clamped = couponApplies && rawFinalPrice < MIN_FINAL_PRICE;
+        hasClampedPrice = hasClampedPrice || clamped;
+
+        const couponText = !selectedCoupon
+          ? "쿠폰 적용 안 함"
+          : couponApplies
+            ? `${selectedCoupon.name} 적용`
+            : "선택한 쿠폰 대상 아님";
+
+        return `
+          <div class="preview-ticket-card">
+            <div class="preview-ticket-top">
+              <div>
+                <div class="ticket-title">${ticket.name}</div>
+                <p class="desc">${couponText}</p>
+              </div>
+              <span class="chip ${couponApplies ? "orange" : ""}">${couponApplies ? couponValueLabel(selectedCoupon) : "미적용"}</span>
+            </div>
+            <div class="preview-price-row"><span>정가</span><strong>${formatMoney(ticket.listPrice)}</strong></div>
+            <div class="preview-price-row"><span>${formatPercent(ticket.rate)} 할인가</span><strong>${formatMoney(ticket.salePrice)}</strong></div>
+            <div class="preview-price-row final"><span>최종가</span><strong>${formatMoney(finalPrice)}</strong></div>
+            <p class="simple-note">총 할인율 ${formatPercent(totalRate)}${clamped ? " · 최소 결제금액 적용" : ""}</p>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("minimumWarning").classList.toggle("show", hasClampedPrice);
     }
 
     function bindCouponRow(row) {
