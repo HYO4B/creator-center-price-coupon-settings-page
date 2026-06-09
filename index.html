@@ -516,6 +516,60 @@
       margin-bottom: 18px;
     }
 
+    .sales-method-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .sales-method-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 16px;
+    }
+
+    .sales-method-card:has(input:checked) {
+      border-color: #111;
+      box-shadow: inset 0 0 0 1px #111;
+    }
+
+    .sales-method-card input {
+      width: 20px;
+      height: 20px;
+      accent-color: #111;
+      margin-top: 2px;
+    }
+
+    .method-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+      font-weight: 950;
+      font-size: 16px;
+    }
+
+    .method-points {
+      display: grid;
+      gap: 5px;
+      margin: 12px 0 0;
+      padding: 0;
+      color: #444;
+      font-size: 12px;
+      list-style: none;
+    }
+
+    .method-points li:before {
+      content: "✓";
+      color: #ff5a00;
+      font-weight: 900;
+      margin-right: 7px;
+    }
+
     .step-badge {
       display: inline-grid;
       place-items: center;
@@ -543,6 +597,10 @@
     .coupon-list {
       display: grid;
       gap: 10px;
+    }
+
+    .is-hidden {
+      display: none !important;
     }
 
     .price-edit-row,
@@ -1134,13 +1192,59 @@
             <div class="simple-card-head">
               <div>
                 <span class="step-badge">1</span>
+                <h2>판매 방식 선택</h2>
+                <p class="section-sub">수강생에게 제공할 구매 옵션을 선택합니다.</p>
+              </div>
+              <span class="chip blue">판매 방식</span>
+            </div>
+            <div class="sales-method-list">
+              <label class="sales-method-card">
+                <div>
+                  <div class="method-title">구독 <span class="chip orange">유입 2배</span></div>
+                  <p class="desc">클래스101 구독자에게만 노출되는 수강 방식입니다. 개별 구매보다 접근성이 높습니다.</p>
+                  <ul class="method-points">
+                    <li>구독 이용자에게 클래스가 노출됩니다.</li>
+                    <li>가격 설정 대상은 아니며 노출 옵션으로만 관리합니다.</li>
+                  </ul>
+                </div>
+                <input type="checkbox" data-sales-toggle="subscription" checked />
+              </label>
+              <label class="sales-method-card">
+                <div>
+                  <div class="method-title">평생 소장</div>
+                  <p class="desc">개별 구매 후 평생 수강할 수 있는 방식입니다.</p>
+                  <ul class="method-points">
+                    <li>높은 가격의 소장형 상품으로 판매합니다.</li>
+                    <li>전문 지식, 수익화, 실무 노하우 콘텐츠에 유리합니다.</li>
+                  </ul>
+                </div>
+                <input type="checkbox" data-sales-toggle="lifetime" checked />
+              </label>
+              <label class="sales-method-card">
+                <div>
+                  <div class="method-title">대여</div>
+                  <p class="desc">개별 구매 후 20주 동안 수강할 수 있는 방식입니다.</p>
+                  <ul class="method-points">
+                    <li>높은 가격이 부담스러운 수강생이 체험하기 쉽습니다.</li>
+                    <li>선택 시 20주 수강 가격을 설정합니다.</li>
+                  </ul>
+                </div>
+                <input type="checkbox" data-sales-toggle="rental" checked />
+              </label>
+            </div>
+          </section>
+
+          <section class="simple-card">
+            <div class="simple-card-head">
+              <div>
+                <span class="step-badge">2</span>
                 <h2>가격과 할인가 수정하기</h2>
-                <p class="section-sub">수강권별 정가, 할인율, 판매가만 수정합니다.</p>
+                <p class="section-sub">선택한 판매 방식의 정가, 할인율, 판매가만 수정합니다. 가격은 100원 단위로 반올림됩니다.</p>
               </div>
               <span class="chip blue">가격 설정</span>
             </div>
             <div class="price-edit-list">
-              <div class="price-edit-row" data-ticket-row data-ticket-name="20주 수강">
+              <div class="price-edit-row" data-ticket-row data-ticket-name="20주 수강" data-sale-type="rental">
                 <div>
                   <div class="ticket-title">20주 수강</div>
                   <p class="desc">기본 수강권</p>
@@ -1149,7 +1253,7 @@
                 <label class="mini-label">할인율<span class="affix-input"><input class="discount-rate-input" value="20" /><span class="affix">%</span></span></label>
                 <label class="mini-label">판매가<span class="affix-input"><input class="sale-price-input" value="119,600" /><span class="affix">원</span></span></label>
               </div>
-              <div class="price-edit-row" data-ticket-row data-ticket-name="평생 소장">
+              <div class="price-edit-row" data-ticket-row data-ticket-name="평생 소장" data-sale-type="lifetime">
                 <div>
                   <div class="ticket-title">평생 소장</div>
                   <p class="desc">소장형 수강권</p>
@@ -1165,7 +1269,7 @@
           <section class="simple-card">
             <div class="simple-card-head">
               <div>
-                <span class="step-badge">2</span>
+                <span class="step-badge">3</span>
                 <h2>쿠폰 여러 개 생성하기</h2>
                 <p class="section-sub">% 할인과 고정 금액 할인을 모두 만들 수 있습니다.</p>
               </div>
@@ -1203,7 +1307,7 @@
         <aside class="preview-side">
           <div class="simple-card-head">
             <div>
-              <span class="step-badge">3</span>
+              <span class="step-badge">4</span>
               <h2>적용 예시</h2>
               <p class="section-sub">고객에게 보이는 가격입니다.</p>
             </div>
@@ -1225,12 +1329,15 @@
     const addCouponBtn = document.getElementById("addCouponBtn");
     const previewCouponSelect = document.getElementById("previewCouponSelect");
     const previewTicketList = document.getElementById("previewTicketList");
+    const salesToggles = [...document.querySelectorAll("[data-sales-toggle]")];
 
     const money = (value) => Number(String(value || "").replace(/[^\d]/g, "")) || 0;
     const percent = (value) => Number(String(value || "").replace(/[^\d.]/g, "")) || 0;
-    const formatMoney = (value) => `${Math.max(0, Math.round(value)).toLocaleString("ko-KR")}원`;
+    const roundToHundred = (value) => Math.round((Number(value) || 0) / 100) * 100;
+    const formatMoney = (value) => `${Math.max(0, roundToHundred(value)).toLocaleString("ko-KR")}원`;
     const formatPercent = (value) => `${Math.max(0, Math.round(value))}%`;
-    const formatNumberInput = (value) => `${Math.max(0, Math.round(value)).toLocaleString("ko-KR")}`;
+    const formatPriceInput = (value) => `${Math.max(0, roundToHundred(value)).toLocaleString("ko-KR")}`;
+    const formatRateInput = (value) => `${Math.max(0, Math.round(value)).toLocaleString("ko-KR")}`;
 
     function normalizePriceRow(row, changedInput) {
       const listInput = row.querySelector(".list-price-input");
@@ -1239,19 +1346,53 @@
       const listPrice = money(listInput.value);
 
       if (changedInput?.classList.contains("sale-price-input")) {
-        const salePrice = money(saleInput.value);
+        const salePrice = roundToHundred(money(saleInput.value));
         const rate = listPrice ? Math.max(0, (1 - salePrice / listPrice) * 100) : 0;
-        rateInput.value = formatNumberInput(rate);
+        rateInput.value = formatRateInput(rate);
+        saleInput.value = formatPriceInput(salePrice);
       } else {
         const rate = percent(rateInput.value);
-        saleInput.value = formatNumberInput(listPrice * (1 - rate / 100));
+        saleInput.value = formatPriceInput(listPrice * (1 - rate / 100));
       }
 
-      listInput.value = formatNumberInput(listPrice);
+      listInput.value = formatPriceInput(listPrice);
     }
 
     function couponRows() {
       return [...document.querySelectorAll("[data-coupon-row]")];
+    }
+
+    function selectedSaleTypes() {
+      return salesToggles.filter((toggle) => toggle.checked).map((toggle) => toggle.dataset.salesToggle);
+    }
+
+    function selectedTicketNames() {
+      const selectedTypes = selectedSaleTypes();
+      return [...document.querySelectorAll("[data-ticket-row]")]
+        .filter((row) => selectedTypes.includes(row.dataset.saleType))
+        .map((row) => row.dataset.ticketName);
+    }
+
+    function syncVisibleTicketRows() {
+      const selectedTypes = selectedSaleTypes();
+      document.querySelectorAll("[data-ticket-row]").forEach((row) => {
+        row.classList.toggle("is-hidden", !selectedTypes.includes(row.dataset.saleType));
+      });
+    }
+
+    function syncCouponTargets() {
+      const ticketNames = selectedTicketNames();
+      couponRows().forEach((row) => {
+        const select = row.querySelector(".coupon-target-input");
+        const previousValue = select.value;
+        select.innerHTML = [
+          "<option>전체 수강권</option>",
+          ...ticketNames.map((name) => `<option>${name}</option>`),
+        ].join("");
+        select.value = [...select.options].some((option) => option.value === previousValue)
+          ? previousValue
+          : "전체 수강권";
+      });
     }
 
     function readCoupons() {
@@ -1265,7 +1406,10 @@
     }
 
     function readTickets() {
-      return [...document.querySelectorAll("[data-ticket-row]")].map((row) => ({
+      const selectedTypes = selectedSaleTypes();
+      return [...document.querySelectorAll("[data-ticket-row]")]
+      .filter((row) => selectedTypes.includes(row.dataset.saleType))
+      .map((row) => ({
         name: row.dataset.ticketName,
         listPrice: money(row.querySelector(".list-price-input").value),
         rate: percent(row.querySelector(".discount-rate-input").value),
@@ -1310,14 +1454,28 @@
     }
 
     function updatePreview() {
+      syncVisibleTicketRows();
+      syncCouponTargets();
       syncPreviewCouponSelect();
       const selectedCoupon = readCoupons().find((item) => item.id === previewCouponSelect.value);
       let hasClampedPrice = false;
+      const tickets = readTickets();
 
-      previewTicketList.innerHTML = readTickets().map((ticket) => {
+      if (!tickets.length) {
+        previewTicketList.innerHTML = `
+          <div class="preview-ticket-card">
+            <div class="ticket-title">선택된 개별 구매 방식이 없습니다.</div>
+            <p class="desc" style="margin-top:6px">구독만 선택한 경우 가격 입력과 쿠폰 미리보기는 표시되지 않습니다.</p>
+          </div>
+        `;
+        document.getElementById("minimumWarning").classList.remove("show");
+        return;
+      }
+
+      previewTicketList.innerHTML = tickets.map((ticket) => {
         const couponApplies = selectedCoupon && (selectedCoupon.target === "전체 수강권" || selectedCoupon.target === ticket.name);
         const couponAmount = couponApplies ? couponDiscountAmount(selectedCoupon, ticket.salePrice) : 0;
-        const rawFinalPrice = ticket.salePrice - couponAmount;
+        const rawFinalPrice = roundToHundred(ticket.salePrice - couponAmount);
         const finalPrice = Math.max(MIN_FINAL_PRICE, rawFinalPrice);
         const totalRate = ticket.listPrice ? (1 - finalPrice / ticket.listPrice) * 100 : 0;
         const clamped = couponApplies && rawFinalPrice < MIN_FINAL_PRICE;
@@ -1372,6 +1530,10 @@
         normalizePriceRow(row, event.target);
         updatePreview();
       });
+    });
+
+    salesToggles.forEach((toggle) => {
+      toggle.addEventListener("change", updatePreview);
     });
 
     couponRows().forEach(bindCouponRow);
