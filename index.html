@@ -558,7 +558,11 @@
     }
 
     .coupon-row {
-      grid-template-columns: minmax(0, 1.1fr) 120px 120px 120px 34px;
+      grid-template-columns: 112px 120px minmax(0, 1fr) 34px;
+    }
+
+    .coupon-row .mini-label:first-child {
+      grid-column: 1 / -1;
     }
 
     .mini-label {
@@ -572,6 +576,30 @@
     .mini-label input,
     .mini-label select {
       height: 38px;
+    }
+
+    .affix-input {
+      position: relative;
+      min-width: 0;
+    }
+
+    .affix-input input {
+      padding-right: 34px;
+    }
+
+    .affix {
+      position: absolute;
+      right: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      pointer-events: none;
+    }
+
+    .coupon-name-input {
+      min-width: 0;
     }
 
     .icon-button {
@@ -1064,18 +1092,18 @@
                   <div class="ticket-title">20주 수강</div>
                   <p class="desc">기본 수강권</p>
                 </div>
-                <label class="mini-label">정가<input class="list-price-input" value="149,400원" /></label>
-                <label class="mini-label">할인율<input class="discount-rate-input" value="20%" /></label>
-                <label class="mini-label">판매가<input class="sale-price-input" value="119,600원" /></label>
+                <label class="mini-label">정가<span class="affix-input"><input class="list-price-input" value="149,400" /><span class="affix">원</span></span></label>
+                <label class="mini-label">할인율<span class="affix-input"><input class="discount-rate-input" value="20" /><span class="affix">%</span></span></label>
+                <label class="mini-label">판매가<span class="affix-input"><input class="sale-price-input" value="119,600" /><span class="affix">원</span></span></label>
               </div>
               <div class="price-edit-row" data-ticket-row data-ticket-name="평생 소장">
                 <div>
                   <div class="ticket-title">평생 소장</div>
                   <p class="desc">소장형 수강권</p>
                 </div>
-                <label class="mini-label">정가<input class="list-price-input" value="174,700원" /></label>
-                <label class="mini-label">할인율<input class="discount-rate-input" value="20%" /></label>
-                <label class="mini-label">판매가<input class="sale-price-input" value="139,800원" /></label>
+                <label class="mini-label">정가<span class="affix-input"><input class="list-price-input" value="174,700" /><span class="affix">원</span></span></label>
+                <label class="mini-label">할인율<span class="affix-input"><input class="discount-rate-input" value="20" /><span class="affix">%</span></span></label>
+                <label class="mini-label">판매가<span class="affix-input"><input class="sale-price-input" value="139,800" /><span class="affix">원</span></span></label>
               </div>
             </div>
             <p class="simple-note">키트/코칭권은 패키지에 포함되어 있으면 고객 화면에 같이 보이지만, 여기서는 수강권 가격만 수정합니다.</p>
@@ -1094,14 +1122,14 @@
               <div class="coupon-row" data-coupon-row>
                 <label class="mini-label">쿠폰 이름<input class="coupon-name-input" value="런칭 15,000원 쿠폰" /></label>
                 <label class="mini-label">방식<select class="coupon-type-input"><option value="fixed">고정가 할인</option><option value="percent">% 할인</option></select></label>
-                <label class="mini-label">할인값<input class="coupon-value-input" value="15,000원" /></label>
+                <label class="mini-label">할인값<span class="affix-input"><input class="coupon-value-input" value="15,000" /><span class="affix coupon-value-unit">원</span></span></label>
                 <label class="mini-label">적용 대상<select class="coupon-target-input"><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
                 <button class="icon-button" type="button" data-remove-coupon>×</button>
               </div>
               <div class="coupon-row" data-coupon-row>
                 <label class="mini-label">쿠폰 이름<input class="coupon-name-input" value="첫 구매 10% 쿠폰" /></label>
                 <label class="mini-label">방식<select class="coupon-type-input"><option value="percent">% 할인</option><option value="fixed">고정가 할인</option></select></label>
-                <label class="mini-label">할인값<input class="coupon-value-input" value="10%" /></label>
+                <label class="mini-label">할인값<span class="affix-input"><input class="coupon-value-input" value="10" /><span class="affix coupon-value-unit">%</span></span></label>
                 <label class="mini-label">적용 대상<select class="coupon-target-input"><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
                 <button class="icon-button" type="button" data-remove-coupon>×</button>
               </div>
@@ -1166,6 +1194,7 @@
     const percent = (value) => Number(String(value || "").replace(/[^\d.]/g, "")) || 0;
     const formatMoney = (value) => `${Math.max(0, Math.round(value)).toLocaleString("ko-KR")}원`;
     const formatPercent = (value) => `${Math.max(0, Math.round(value))}%`;
+    const formatNumberInput = (value) => `${Math.max(0, Math.round(value)).toLocaleString("ko-KR")}`;
 
     function normalizePriceRow(row, changedInput) {
       const listInput = row.querySelector(".list-price-input");
@@ -1176,13 +1205,13 @@
       if (changedInput?.classList.contains("sale-price-input")) {
         const salePrice = money(saleInput.value);
         const rate = listPrice ? Math.max(0, (1 - salePrice / listPrice) * 100) : 0;
-        rateInput.value = formatPercent(rate);
+        rateInput.value = formatNumberInput(rate);
       } else {
         const rate = percent(rateInput.value);
-        saleInput.value = formatMoney(listPrice * (1 - rate / 100));
+        saleInput.value = formatNumberInput(listPrice * (1 - rate / 100));
       }
 
-      listInput.value = formatMoney(listPrice);
+      listInput.value = formatNumberInput(listPrice);
     }
 
     function couponRows() {
@@ -1214,6 +1243,17 @@
       return money(coupon.value);
     }
 
+    function couponValueLabel(coupon) {
+      if (!coupon) return "";
+      return coupon.type === "percent" ? `${percent(coupon.value)}%` : formatMoney(money(coupon.value));
+    }
+
+    function updateCouponUnit(row) {
+      const unit = row.querySelector(".coupon-value-unit");
+      const type = row.querySelector(".coupon-type-input").value;
+      unit.textContent = type === "percent" ? "%" : "원";
+    }
+
     function updatePreview() {
       const ticket = readFirstTicket();
       const coupon = readApplicableCoupon(ticket.name);
@@ -1222,7 +1262,7 @@
       const finalPrice = Math.max(MIN_FINAL_PRICE, rawFinalPrice);
       const totalRate = ticket.listPrice ? (1 - finalPrice / ticket.listPrice) * 100 : 0;
       const clamped = rawFinalPrice < MIN_FINAL_PRICE;
-      const couponLabel = coupon ? `${coupon.value} 쿠폰 적용 후` : "쿠폰 없음";
+      const couponLabel = coupon ? `${couponValueLabel(coupon)} 쿠폰 적용 후` : "쿠폰 없음";
       const couponDesc = coupon ? `${coupon.name} 적용` : "적용된 쿠폰 없음";
 
       document.getElementById("previewListPrice").textContent = formatMoney(ticket.listPrice);
@@ -1240,12 +1280,16 @@
 
     function bindCouponRow(row) {
       row.addEventListener("input", updatePreview);
-      row.addEventListener("change", updatePreview);
+      row.addEventListener("change", (event) => {
+        if (event.target.classList.contains("coupon-type-input")) updateCouponUnit(row);
+        updatePreview();
+      });
       row.querySelector("[data-remove-coupon]").addEventListener("click", () => {
         if (couponRows().length === 1) return;
         row.remove();
         updatePreview();
       });
+      updateCouponUnit(row);
     }
 
     document.querySelectorAll("[data-ticket-row]").forEach((row) => {
@@ -1267,7 +1311,7 @@
       row.innerHTML = `
         <label class="mini-label">쿠폰 이름<input class="coupon-name-input" value="새 쿠폰" /></label>
         <label class="mini-label">방식<select class="coupon-type-input"><option value="fixed">고정가 할인</option><option value="percent">% 할인</option></select></label>
-        <label class="mini-label">할인값<input class="coupon-value-input" value="5,000원" /></label>
+        <label class="mini-label">할인값<span class="affix-input"><input class="coupon-value-input" value="5,000" /><span class="affix coupon-value-unit">원</span></span></label>
         <label class="mini-label">적용 대상<select class="coupon-target-input"><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
         <button class="icon-button" type="button" data-remove-coupon>×</button>
       `;
