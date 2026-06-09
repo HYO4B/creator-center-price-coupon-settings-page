@@ -728,6 +728,21 @@
       margin-bottom: 14px;
     }
 
+    .preview-control {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 14px;
+      color: #555;
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .preview-control select {
+      height: 40px;
+      border-radius: 10px;
+      font-weight: 800;
+    }
+
     .preview-stack {
       display: grid;
       grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
@@ -1155,6 +1170,10 @@
               <p class="section-sub">고객에게 보이는 가격입니다.</p>
             </div>
           </div>
+          <label class="preview-control">
+            적용할 쿠폰 선택
+            <select id="previewCouponSelect"></select>
+          </label>
           <div class="formula-preview" style="grid-template-columns:1fr">
             <div class="formula-box">
               <div class="metric-label">정가</div>
@@ -1189,6 +1208,7 @@
     const MIN_FINAL_PRICE = 9900;
     const couponList = document.querySelector(".coupon-list");
     const addCouponBtn = document.getElementById("addCouponBtn");
+    const previewCouponSelect = document.getElementById("previewCouponSelect");
 
     const money = (value) => Number(String(value || "").replace(/[^\d]/g, "")) || 0;
     const percent = (value) => Number(String(value || "").replace(/[^\d.]/g, "")) || 0;
@@ -1218,6 +1238,16 @@
       return [...document.querySelectorAll("[data-coupon-row]")];
     }
 
+    function readCoupons() {
+      return couponRows().map((row, index) => ({
+        id: `coupon-${index}`,
+        name: row.querySelector(".coupon-name-input").value.trim() || "이름 없는 쿠폰",
+        type: row.querySelector(".coupon-type-input").value,
+        value: row.querySelector(".coupon-value-input").value,
+        target: row.querySelector(".coupon-target-input").value,
+      }));
+    }
+
     function readFirstTicket() {
       const row = document.querySelector("[data-ticket-row]");
       return {
@@ -1228,13 +1258,8 @@
       };
     }
 
-    function readApplicableCoupon(ticketName) {
-      return couponRows().map((row) => ({
-        name: row.querySelector(".coupon-name-input").value.trim() || "이름 없는 쿠폰",
-        type: row.querySelector(".coupon-type-input").value,
-        value: row.querySelector(".coupon-value-input").value,
-        target: row.querySelector(".coupon-target-input").value,
-      })).find((coupon) => coupon.target === "전체 수강권" || coupon.target === ticketName);
+    function applicableCoupons(ticketName) {
+      return readCoupons().filter((coupon) => coupon.target === "전체 수강권" || coupon.target === ticketName);
     }
 
     function couponDiscountAmount(coupon, salePrice) {
@@ -1254,9 +1279,25 @@
       unit.textContent = type === "percent" ? "%" : "원";
     }
 
+    function syncPreviewCouponSelect(ticketName) {
+      const previousValue = previewCouponSelect.value;
+      const coupons = applicableCoupons(ticketName);
+      const options = [
+        `<option value="none">쿠폰 적용 안 함</option>`,
+        ...coupons.map((coupon) => `<option value="${coupon.id}">${coupon.name} (${couponValueLabel(coupon)})</option>`),
+      ];
+      previewCouponSelect.innerHTML = options.join("");
+      if ([...previewCouponSelect.options].some((option) => option.value === previousValue)) {
+        previewCouponSelect.value = previousValue;
+      } else if (coupons.length) {
+        previewCouponSelect.value = coupons[0].id;
+      }
+    }
+
     function updatePreview() {
       const ticket = readFirstTicket();
-      const coupon = readApplicableCoupon(ticket.name);
+      syncPreviewCouponSelect(ticket.name);
+      const coupon = applicableCoupons(ticket.name).find((item) => item.id === previewCouponSelect.value);
       const couponAmount = couponDiscountAmount(coupon, ticket.salePrice);
       const rawFinalPrice = ticket.salePrice - couponAmount;
       const finalPrice = Math.max(MIN_FINAL_PRICE, rawFinalPrice);
@@ -1304,6 +1345,7 @@
     });
 
     couponRows().forEach(bindCouponRow);
+    previewCouponSelect.addEventListener("change", updatePreview);
     addCouponBtn.addEventListener("click", () => {
       const row = document.createElement("div");
       row.className = "coupon-row";
