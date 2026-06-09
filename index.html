@@ -483,6 +483,46 @@
       margin-bottom: 10px;
     }
 
+    .ia-switcher {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      max-width: 720px;
+      margin: 0 auto 18px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .ia-tab {
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      padding: 12px;
+      text-align: left;
+    }
+
+    .ia-tab strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 14px;
+    }
+
+    .ia-tab span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .ia-tab.active {
+      background: #111;
+      color: #fff;
+    }
+
+    .ia-tab.active span {
+      color: rgba(255, 255, 255, .72);
+    }
+
     .simple-flow {
       display: grid;
       gap: 16px;
@@ -493,6 +533,10 @@
       grid-template-columns: minmax(0, 1fr) 320px;
       gap: 16px;
       align-items: start;
+    }
+
+    .simple-layout.price-mode {
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .simple-left {
@@ -1182,13 +1226,24 @@
     <main class="simple-page">
       <section class="simple-hero">
         <div class="eyebrow">Creator Center</div>
-        <h1>가격과 쿠폰을 간단히 설정하세요</h1>
-        <p class="desc">크리에이터는 가격, 쿠폰, 적용 예시만 확인하면 됩니다. 복잡한 정책은 저장 후 백엔드에서 자동으로 처리됩니다.</p>
+        <h1>상품 가격과 운영 쿠폰을 분리해 관리하세요</h1>
+        <p class="desc">가격은 클래스 제작 중 상품 설정에서, 쿠폰은 런칭 후 클래스 운영 메뉴에서 관리하는 구조입니다.</p>
       </section>
 
-      <div class="simple-layout">
+      <div class="ia-switcher" aria-label="화면 영역 선택">
+        <button class="ia-tab active" type="button" data-view-tab="price">
+          <strong>상품 설정 · 가격</strong>
+          <span>클래스 제작/런칭 준비 중 설정</span>
+        </button>
+        <button class="ia-tab" type="button" data-view-tab="coupon">
+          <strong>클래스 운영 · 프로모션/쿠폰</strong>
+          <span>런칭 후에도 자주 접근하는 운영 메뉴</span>
+        </button>
+      </div>
+
+      <div class="simple-layout price-mode" id="simpleLayout">
         <div class="simple-left">
-          <section class="simple-card">
+          <section class="simple-card price-only">
             <div class="simple-card-head">
               <div>
                 <span class="step-badge">1</span>
@@ -1234,7 +1289,7 @@
             </div>
           </section>
 
-          <section class="simple-card">
+          <section class="simple-card price-only">
             <div class="simple-card-head">
               <div>
                 <span class="step-badge">2</span>
@@ -1266,12 +1321,12 @@
             <p class="simple-note">키트/코칭권은 패키지에 포함되어 있으면 고객 화면에 같이 보이지만, 여기서는 수강권 가격만 수정합니다.</p>
           </section>
 
-          <section class="simple-card">
+          <section class="simple-card operations-only is-hidden">
             <div class="simple-card-head">
               <div>
-                <span class="step-badge">3</span>
+                <span class="step-badge">1</span>
                 <h2>쿠폰 여러 개 생성하기</h2>
-                <p class="section-sub">% 할인과 고정 금액 할인을 모두 만들 수 있습니다.</p>
+                <p class="section-sub">클래스 운영 메뉴에서 런칭 후에도 자유롭게 쿠폰을 발급합니다.</p>
               </div>
               <span class="chip orange">쿠폰 설정</span>
             </div>
@@ -1298,18 +1353,18 @@
             </div>
           </section>
 
-          <section class="coming-soon-simple">
+          <section class="coming-soon-simple price-only">
             <h2>코칭권/키트 가격 설정 <span class="chip">COMING SOON</span></h2>
             <p class="desc">패키지에 포함된 코칭권과 키트는 고객 화면에 표시되지만, 가격 수정은 추후 지원 예정입니다.</p>
           </section>
         </div>
 
-        <aside class="preview-side">
+        <aside class="preview-side operations-only is-hidden">
           <div class="simple-card-head">
             <div>
-              <span class="step-badge">4</span>
-              <h2>적용 예시</h2>
-              <p class="section-sub">고객에게 보이는 가격입니다.</p>
+              <span class="step-badge">2</span>
+              <h2>쿠폰 적용 예시</h2>
+              <p class="section-sub">운영자가 선택한 쿠폰이 고객 가격에 어떻게 반영되는지 확인합니다.</p>
             </div>
           </div>
           <label class="preview-control">
@@ -1330,6 +1385,8 @@
     const previewCouponSelect = document.getElementById("previewCouponSelect");
     const previewTicketList = document.getElementById("previewTicketList");
     const salesToggles = [...document.querySelectorAll("[data-sales-toggle]")];
+    const viewTabs = [...document.querySelectorAll("[data-view-tab]")];
+    const simpleLayout = document.getElementById("simpleLayout");
 
     const money = (value) => Number(String(value || "").replace(/[^\d]/g, "")) || 0;
     const percent = (value) => Number(String(value || "").replace(/[^\d.]/g, "")) || 0;
@@ -1507,6 +1564,21 @@
       document.getElementById("minimumWarning").classList.toggle("show", hasClampedPrice);
     }
 
+    function setView(view) {
+      const isPriceView = view === "price";
+      document.querySelectorAll(".price-only").forEach((element) => {
+        element.classList.toggle("is-hidden", !isPriceView);
+      });
+      document.querySelectorAll(".operations-only").forEach((element) => {
+        element.classList.toggle("is-hidden", isPriceView);
+      });
+      simpleLayout.classList.toggle("price-mode", isPriceView);
+      viewTabs.forEach((tab) => {
+        tab.classList.toggle("active", tab.dataset.viewTab === view);
+      });
+      updatePreview();
+    }
+
     function bindCouponRow(row) {
       row.addEventListener("input", updatePreview);
       row.addEventListener("change", (event) => {
@@ -1536,6 +1608,10 @@
       toggle.addEventListener("change", updatePreview);
     });
 
+    viewTabs.forEach((tab) => {
+      tab.addEventListener("click", () => setView(tab.dataset.viewTab));
+    });
+
     couponRows().forEach(bindCouponRow);
     previewCouponSelect.addEventListener("change", updatePreview);
     addCouponBtn.addEventListener("click", () => {
@@ -1555,6 +1631,7 @@
     });
 
     document.querySelectorAll("[data-ticket-row]").forEach((row) => normalizePriceRow(row));
+    setView("price");
     updatePreview();
   </script>
 </body>
