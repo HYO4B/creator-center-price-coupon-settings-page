@@ -607,6 +607,32 @@
       margin-top: 12px;
     }
 
+    .coming-soon-simple {
+      border: 1px dashed #d7d7d7;
+      border-radius: 18px;
+      background: #fafafa;
+      padding: 22px 24px;
+    }
+
+    .coming-soon-simple h2 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .warning-text {
+      display: none;
+      margin-top: 10px;
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .warning-text.show {
+      display: block;
+    }
+
     .simple-ticket {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -1033,23 +1059,23 @@
               <span class="chip blue">가격 설정</span>
             </div>
             <div class="price-edit-list">
-              <div class="price-edit-row">
+              <div class="price-edit-row" data-ticket-row data-ticket-name="20주 수강">
                 <div>
                   <div class="ticket-title">20주 수강</div>
                   <p class="desc">기본 수강권</p>
                 </div>
-                <label class="mini-label">정가<input value="149,400원" /></label>
-                <label class="mini-label">할인율<input value="20%" /></label>
-                <label class="mini-label">판매가<input value="119,600원" /></label>
+                <label class="mini-label">정가<input class="list-price-input" value="149,400원" /></label>
+                <label class="mini-label">할인율<input class="discount-rate-input" value="20%" /></label>
+                <label class="mini-label">판매가<input class="sale-price-input" value="119,600원" /></label>
               </div>
-              <div class="price-edit-row">
+              <div class="price-edit-row" data-ticket-row data-ticket-name="평생 소장">
                 <div>
                   <div class="ticket-title">평생 소장</div>
                   <p class="desc">소장형 수강권</p>
                 </div>
-                <label class="mini-label">정가<input value="174,700원" /></label>
-                <label class="mini-label">할인율<input value="20%" /></label>
-                <label class="mini-label">판매가<input value="139,800원" /></label>
+                <label class="mini-label">정가<input class="list-price-input" value="174,700원" /></label>
+                <label class="mini-label">할인율<input class="discount-rate-input" value="20%" /></label>
+                <label class="mini-label">판매가<input class="sale-price-input" value="139,800원" /></label>
               </div>
             </div>
             <p class="simple-note">키트/코칭권은 패키지에 포함되어 있으면 고객 화면에 같이 보이지만, 여기서는 수강권 가격만 수정합니다.</p>
@@ -1065,26 +1091,31 @@
               <span class="chip orange">쿠폰 설정</span>
             </div>
             <div class="coupon-list">
-              <div class="coupon-row">
-                <label class="mini-label">쿠폰 이름<input value="런칭 15,000원 쿠폰" /></label>
-                <label class="mini-label">방식<select><option>고정가 할인</option><option>% 할인</option></select></label>
-                <label class="mini-label">할인값<input value="15,000원" /></label>
-                <label class="mini-label">적용 대상<select><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
-                <button class="icon-button" type="button">×</button>
+              <div class="coupon-row" data-coupon-row>
+                <label class="mini-label">쿠폰 이름<input class="coupon-name-input" value="런칭 15,000원 쿠폰" /></label>
+                <label class="mini-label">방식<select class="coupon-type-input"><option value="fixed">고정가 할인</option><option value="percent">% 할인</option></select></label>
+                <label class="mini-label">할인값<input class="coupon-value-input" value="15,000원" /></label>
+                <label class="mini-label">적용 대상<select class="coupon-target-input"><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
+                <button class="icon-button" type="button" data-remove-coupon>×</button>
               </div>
-              <div class="coupon-row">
-                <label class="mini-label">쿠폰 이름<input value="첫 구매 10% 쿠폰" /></label>
-                <label class="mini-label">방식<select><option>% 할인</option><option>고정가 할인</option></select></label>
-                <label class="mini-label">할인값<input value="10%" /></label>
-                <label class="mini-label">적용 대상<select><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
-                <button class="icon-button" type="button">×</button>
+              <div class="coupon-row" data-coupon-row>
+                <label class="mini-label">쿠폰 이름<input class="coupon-name-input" value="첫 구매 10% 쿠폰" /></label>
+                <label class="mini-label">방식<select class="coupon-type-input"><option value="percent">% 할인</option><option value="fixed">고정가 할인</option></select></label>
+                <label class="mini-label">할인값<input class="coupon-value-input" value="10%" /></label>
+                <label class="mini-label">적용 대상<select class="coupon-target-input"><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
+                <button class="icon-button" type="button" data-remove-coupon>×</button>
               </div>
-              <button class="add-row-button" type="button">+ 쿠폰 추가</button>
+              <button class="add-row-button" type="button" id="addCouponBtn">+ 쿠폰 추가</button>
             </div>
             <div class="safety-note">
               <strong>!</strong>
               <span>쿠폰 적용 후 결제 금액은 최소 9,900원 이상이어야 합니다. 9,900원보다 낮아지는 쿠폰은 저장 시 자동으로 제한됩니다.</span>
             </div>
+          </section>
+
+          <section class="coming-soon-simple">
+            <h2>코칭권/키트 가격 설정 <span class="chip">COMING SOON</span></h2>
+            <p class="desc">패키지에 포함된 코칭권과 키트는 고객 화면에 표시되지만, 가격 수정은 추후 지원 예정입니다.</p>
           </section>
         </div>
 
@@ -1099,31 +1130,154 @@
           <div class="formula-preview" style="grid-template-columns:1fr">
             <div class="formula-box">
               <div class="metric-label">정가</div>
-              <strong>149,400원</strong>
+              <strong id="previewListPrice">149,400원</strong>
             </div>
             <div class="formula-box">
-              <div class="metric-label">20% 할인가</div>
-              <strong>119,600원</strong>
+              <div class="metric-label" id="previewDiscountLabel">20% 할인가</div>
+              <strong id="previewSalePrice">119,600원</strong>
             </div>
             <div class="formula-box result">
-              <div class="metric-label">15,000원 쿠폰 적용 후</div>
-              <strong>104,600원</strong>
+              <div class="metric-label" id="previewCouponLabel">15,000원 쿠폰 적용 후</div>
+              <strong id="previewFinalPrice">104,600원</strong>
             </div>
           </div>
           <div class="ticket-card selected" style="margin-top:16px;margin-bottom:0">
             <div>
-              <div class="ticket-title">20주 수강</div>
-              <p class="desc">런칭 15,000원 쿠폰 적용</p>
+              <div class="ticket-title" id="previewTicketName">20주 수강</div>
+              <p class="desc" id="previewTicketCoupon">런칭 15,000원 쿠폰 적용</p>
             </div>
             <div class="price-box">
-              <div class="list-price">149,400원</div>
-              <div class="sale-line"><span class="discount">30%</span><span class="sale-price">104,600원</span></div>
+              <div class="list-price" id="previewTicketListPrice">149,400원</div>
+              <div class="sale-line"><span class="discount" id="previewTicketDiscount">30%</span><span class="sale-price" id="previewTicketFinalPrice">104,600원</span></div>
             </div>
           </div>
+          <p class="warning-text" id="minimumWarning">최소 결제금액 9,900원이 적용되어 쿠폰 할인이 제한됐습니다.</p>
           <p class="simple-note">예시 금액이 9,900원 미만이면 쿠폰 적용이 막힙니다.</p>
         </aside>
       </div>
     </main>
   </div>
+  <script>
+    const MIN_FINAL_PRICE = 9900;
+    const couponList = document.querySelector(".coupon-list");
+    const addCouponBtn = document.getElementById("addCouponBtn");
+
+    const money = (value) => Number(String(value || "").replace(/[^\d]/g, "")) || 0;
+    const percent = (value) => Number(String(value || "").replace(/[^\d.]/g, "")) || 0;
+    const formatMoney = (value) => `${Math.max(0, Math.round(value)).toLocaleString("ko-KR")}원`;
+    const formatPercent = (value) => `${Math.max(0, Math.round(value))}%`;
+
+    function normalizePriceRow(row, changedInput) {
+      const listInput = row.querySelector(".list-price-input");
+      const rateInput = row.querySelector(".discount-rate-input");
+      const saleInput = row.querySelector(".sale-price-input");
+      const listPrice = money(listInput.value);
+
+      if (changedInput?.classList.contains("sale-price-input")) {
+        const salePrice = money(saleInput.value);
+        const rate = listPrice ? Math.max(0, (1 - salePrice / listPrice) * 100) : 0;
+        rateInput.value = formatPercent(rate);
+      } else {
+        const rate = percent(rateInput.value);
+        saleInput.value = formatMoney(listPrice * (1 - rate / 100));
+      }
+
+      listInput.value = formatMoney(listPrice);
+    }
+
+    function couponRows() {
+      return [...document.querySelectorAll("[data-coupon-row]")];
+    }
+
+    function readFirstTicket() {
+      const row = document.querySelector("[data-ticket-row]");
+      return {
+        name: row.dataset.ticketName,
+        listPrice: money(row.querySelector(".list-price-input").value),
+        rate: percent(row.querySelector(".discount-rate-input").value),
+        salePrice: money(row.querySelector(".sale-price-input").value),
+      };
+    }
+
+    function readApplicableCoupon(ticketName) {
+      return couponRows().map((row) => ({
+        name: row.querySelector(".coupon-name-input").value.trim() || "이름 없는 쿠폰",
+        type: row.querySelector(".coupon-type-input").value,
+        value: row.querySelector(".coupon-value-input").value,
+        target: row.querySelector(".coupon-target-input").value,
+      })).find((coupon) => coupon.target === "전체 수강권" || coupon.target === ticketName);
+    }
+
+    function couponDiscountAmount(coupon, salePrice) {
+      if (!coupon) return 0;
+      if (coupon.type === "percent") return salePrice * (percent(coupon.value) / 100);
+      return money(coupon.value);
+    }
+
+    function updatePreview() {
+      const ticket = readFirstTicket();
+      const coupon = readApplicableCoupon(ticket.name);
+      const couponAmount = couponDiscountAmount(coupon, ticket.salePrice);
+      const rawFinalPrice = ticket.salePrice - couponAmount;
+      const finalPrice = Math.max(MIN_FINAL_PRICE, rawFinalPrice);
+      const totalRate = ticket.listPrice ? (1 - finalPrice / ticket.listPrice) * 100 : 0;
+      const clamped = rawFinalPrice < MIN_FINAL_PRICE;
+      const couponLabel = coupon ? `${coupon.value} 쿠폰 적용 후` : "쿠폰 없음";
+      const couponDesc = coupon ? `${coupon.name} 적용` : "적용된 쿠폰 없음";
+
+      document.getElementById("previewListPrice").textContent = formatMoney(ticket.listPrice);
+      document.getElementById("previewDiscountLabel").textContent = `${formatPercent(ticket.rate)} 할인가`;
+      document.getElementById("previewSalePrice").textContent = formatMoney(ticket.salePrice);
+      document.getElementById("previewCouponLabel").textContent = couponLabel;
+      document.getElementById("previewFinalPrice").textContent = formatMoney(finalPrice);
+      document.getElementById("previewTicketName").textContent = ticket.name;
+      document.getElementById("previewTicketCoupon").textContent = couponDesc;
+      document.getElementById("previewTicketListPrice").textContent = formatMoney(ticket.listPrice);
+      document.getElementById("previewTicketDiscount").textContent = formatPercent(totalRate);
+      document.getElementById("previewTicketFinalPrice").textContent = formatMoney(finalPrice);
+      document.getElementById("minimumWarning").classList.toggle("show", clamped);
+    }
+
+    function bindCouponRow(row) {
+      row.addEventListener("input", updatePreview);
+      row.addEventListener("change", updatePreview);
+      row.querySelector("[data-remove-coupon]").addEventListener("click", () => {
+        if (couponRows().length === 1) return;
+        row.remove();
+        updatePreview();
+      });
+    }
+
+    document.querySelectorAll("[data-ticket-row]").forEach((row) => {
+      row.addEventListener("input", (event) => {
+        normalizePriceRow(row, event.target);
+        updatePreview();
+      });
+      row.addEventListener("change", (event) => {
+        normalizePriceRow(row, event.target);
+        updatePreview();
+      });
+    });
+
+    couponRows().forEach(bindCouponRow);
+    addCouponBtn.addEventListener("click", () => {
+      const row = document.createElement("div");
+      row.className = "coupon-row";
+      row.dataset.couponRow = "";
+      row.innerHTML = `
+        <label class="mini-label">쿠폰 이름<input class="coupon-name-input" value="새 쿠폰" /></label>
+        <label class="mini-label">방식<select class="coupon-type-input"><option value="fixed">고정가 할인</option><option value="percent">% 할인</option></select></label>
+        <label class="mini-label">할인값<input class="coupon-value-input" value="5,000원" /></label>
+        <label class="mini-label">적용 대상<select class="coupon-target-input"><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
+        <button class="icon-button" type="button" data-remove-coupon>×</button>
+      `;
+      couponList.insertBefore(row, addCouponBtn);
+      bindCouponRow(row);
+      updatePreview();
+    });
+
+    document.querySelectorAll("[data-ticket-row]").forEach((row) => normalizePriceRow(row));
+    updatePreview();
+  </script>
 </body>
 </html>
