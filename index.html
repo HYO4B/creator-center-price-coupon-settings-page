@@ -738,6 +738,47 @@
       margin-top: 8px;
     }
 
+    .coupon-list-board {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .coupon-list-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) 90px 90px 130px;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+    }
+
+    .coupon-list-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .coupon-stat-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      margin-bottom: 3px;
+    }
+
+    .coupon-stat-value {
+      font-weight: 950;
+    }
+
+    .coupon-create-form {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fafafa;
+      padding: 18px;
+    }
+
     .mini-label {
       display: grid;
       gap: 6px;
@@ -1396,67 +1437,89 @@
             <div class="simple-card-head">
               <div>
                 <span class="step-badge">1</span>
-                <h2>전체 쿠폰 발급</h2>
-                <p class="section-sub">상품 제작 화면 밖에서, 운영 중인 강의에 쿠폰을 발급합니다.</p>
+                <h2>쿠폰 리스트</h2>
+                <p class="section-sub">클래스 운영 메뉴에서 발급한 쿠폰과 사용 현황을 확인합니다.</p>
               </div>
               <span class="chip orange">클래스 운영</span>
             </div>
-            <div class="issue-panel">
-              <h3>쿠폰 발급</h3>
+            <div class="coupon-list-board" id="couponListBoard">
+              <div class="coupon-list-item" data-coupon-row data-coupon-name="런칭 15,000원 쿠폰" data-coupon-type="fixed" data-coupon-value="15000" data-coupon-target="전체 수강권">
+                <div>
+                  <strong>런칭 15,000원 쿠폰</strong>
+                  <p class="desc">전체 수강권 · 고정가 할인</p>
+                </div>
+                <div>
+                  <div class="coupon-stat-label">사용 횟수</div>
+                  <div class="coupon-stat-value">148회</div>
+                </div>
+                <div>
+                  <div class="coupon-stat-label">현재 남은 수량</div>
+                  <div class="coupon-stat-value">180장</div>
+                </div>
+                <div>
+                  <div class="coupon-stat-label">마감기한</div>
+                  <div class="coupon-stat-value">2026.06.12</div>
+                </div>
+              </div>
+              <div class="coupon-list-item" data-coupon-row data-coupon-name="첫 구매 10% 쿠폰" data-coupon-type="percent" data-coupon-value="10" data-coupon-target="전체 수강권">
+                <div>
+                  <strong>첫 구매 10% 쿠폰</strong>
+                  <p class="desc">전체 수강권 · % 할인</p>
+                </div>
+                <div>
+                  <div class="coupon-stat-label">사용 횟수</div>
+                  <div class="coupon-stat-value">56회</div>
+                </div>
+                <div>
+                  <div class="coupon-stat-label">현재 남은 수량</div>
+                  <div class="coupon-stat-value">무제한</div>
+                </div>
+                <div>
+                  <div class="coupon-stat-label">마감기한</div>
+                  <div class="coupon-stat-value">2026.06.30</div>
+                </div>
+              </div>
+            </div>
+            <div class="coupon-create-form">
+              <div class="simple-card-head">
+                <div>
+                  <h2>쿠폰 1개 생성</h2>
+                  <p class="section-sub">쿠폰은 한 번에 하나씩 생성합니다.</p>
+                </div>
+              </div>
               <div class="issue-grid">
                 <div class="issue-row">
                   <label>쿠폰 발급할 강의 <span class="required">*</span></label>
                   <p class="issue-help">프로모션에 동의한 강의만 선택할 수 있습니다.</p>
-                  <select>
+                  <select id="newCouponClass">
                     <option>비지오랩 대여/평생소장 클래스</option>
                     <option>새로 런칭한 드로잉 클래스</option>
                     <option>공방 뜨개 클래스</option>
                   </select>
                 </div>
                 <div class="issue-row">
-                  <label>발급할 쿠폰 <span class="required">*</span></label>
-                  <select id="issueCouponSelect">
-                    <option>런칭 15,000원 쿠폰</option>
-                    <option>첫 구매 10% 쿠폰</option>
-                  </select>
+                  <label>쿠폰명 <span class="required">*</span></label>
+                  <input id="newCouponName" value="새 프로모션 쿠폰" />
+                </div>
+                <div class="coupon-row" style="padding:0;border:0;background:transparent">
+                  <label class="mini-label">방식<select id="newCouponType" class="coupon-type-input"><option value="fixed">고정가 할인</option><option value="percent">% 할인</option></select></label>
+                  <label class="mini-label">할인값<span class="affix-input"><input id="newCouponValue" value="5,000" /><span class="affix" id="newCouponUnit">원</span></span></label>
+                  <label class="mini-label">적용 대상<select id="newCouponTarget"><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
                 </div>
                 <div class="issue-row">
                   <label>쿠폰 개수 <span class="required">*</span></label>
                   <div class="quantity-line">
-                    <input value="300" placeholder="최대 999까지 입력 가능" />
-                    <label class="check-line">무제한 <input type="checkbox" /></label>
+                    <input id="newCouponQuantity" value="300" placeholder="최대 999까지 입력 가능" />
+                    <label class="check-line">무제한 <input id="newCouponUnlimited" type="checkbox" /></label>
                   </div>
                 </div>
                 <div class="issue-row">
                   <label>쿠폰 발급 만료일 <span class="required">*</span></label>
-                  <input value="2026.06.12. 23:59:59" />
+                  <input id="newCouponDeadline" type="datetime-local" value="2026-06-12T23:59" />
                   <p class="issue-help">발급된 쿠폰은 수강생이 쿠폰함에 등록한 시점부터 24시간 내에 사용할 수 있습니다.</p>
                 </div>
-                <button class="issue-submit" type="button">쿠폰 발급하기</button>
+                <button class="issue-submit" type="button" id="createCouponBtn">쿠폰 생성하기</button>
               </div>
-            </div>
-            <div class="simple-card-head" style="margin-top:18px">
-              <div>
-                <h2>쿠폰 템플릿</h2>
-                <p class="section-sub">자주 발급할 쿠폰 조건을 미리 만들어둡니다.</p>
-              </div>
-            </div>
-            <div class="coupon-list">
-              <div class="coupon-row" data-coupon-row>
-                <label class="mini-label">쿠폰 이름<input class="coupon-name-input" value="런칭 15,000원 쿠폰" /></label>
-                <label class="mini-label">방식<select class="coupon-type-input"><option value="fixed">고정가 할인</option><option value="percent">% 할인</option></select></label>
-                <label class="mini-label">할인값<span class="affix-input"><input class="coupon-value-input" value="15,000" /><span class="affix coupon-value-unit">원</span></span></label>
-                <label class="mini-label">적용 대상<select class="coupon-target-input"><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
-                <button class="icon-button" type="button" data-remove-coupon>×</button>
-              </div>
-              <div class="coupon-row" data-coupon-row>
-                <label class="mini-label">쿠폰 이름<input class="coupon-name-input" value="첫 구매 10% 쿠폰" /></label>
-                <label class="mini-label">방식<select class="coupon-type-input"><option value="percent">% 할인</option><option value="fixed">고정가 할인</option></select></label>
-                <label class="mini-label">할인값<span class="affix-input"><input class="coupon-value-input" value="10" /><span class="affix coupon-value-unit">%</span></span></label>
-                <label class="mini-label">적용 대상<select class="coupon-target-input"><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
-                <button class="icon-button" type="button" data-remove-coupon>×</button>
-              </div>
-              <button class="add-row-button" type="button" id="addCouponBtn">+ 쿠폰 추가</button>
             </div>
             <div class="safety-note">
               <strong>!</strong>
@@ -1491,14 +1554,15 @@
   </div>
   <script>
     const MIN_FINAL_PRICE = 9900;
-    const couponList = document.querySelector(".coupon-list");
-    const addCouponBtn = document.getElementById("addCouponBtn");
+    const couponListBoard = document.getElementById("couponListBoard");
+    const createCouponBtn = document.getElementById("createCouponBtn");
     const previewCouponSelect = document.getElementById("previewCouponSelect");
     const previewTicketList = document.getElementById("previewTicketList");
     const salesToggles = [...document.querySelectorAll("[data-sales-toggle]")];
     const viewTabs = [...document.querySelectorAll("[data-view-tab]")];
     const simpleLayout = document.getElementById("simpleLayout");
-    const issueCouponSelect = document.getElementById("issueCouponSelect");
+    const newCouponType = document.getElementById("newCouponType");
+    const newCouponUnit = document.getElementById("newCouponUnit");
 
     const money = (value) => Number(String(value || "").replace(/[^\d]/g, "")) || 0;
     const percent = (value) => Number(String(value || "").replace(/[^\d.]/g, "")) || 0;
@@ -1551,26 +1615,24 @@
 
     function syncCouponTargets() {
       const ticketNames = selectedTicketNames();
-      couponRows().forEach((row) => {
-        const select = row.querySelector(".coupon-target-input");
-        const previousValue = select.value;
-        select.innerHTML = [
-          "<option>전체 수강권</option>",
-          ...ticketNames.map((name) => `<option>${name}</option>`),
-        ].join("");
-        select.value = [...select.options].some((option) => option.value === previousValue)
-          ? previousValue
-          : "전체 수강권";
-      });
+      const select = document.getElementById("newCouponTarget");
+      const previousValue = select.value;
+      select.innerHTML = [
+        "<option>전체 수강권</option>",
+        ...ticketNames.map((name) => `<option>${name}</option>`),
+      ].join("");
+      select.value = [...select.options].some((option) => option.value === previousValue)
+        ? previousValue
+        : "전체 수강권";
     }
 
     function readCoupons() {
       return couponRows().map((row, index) => ({
         id: `coupon-${index}`,
-        name: row.querySelector(".coupon-name-input").value.trim() || "이름 없는 쿠폰",
-        type: row.querySelector(".coupon-type-input").value,
-        value: row.querySelector(".coupon-value-input").value,
-        target: row.querySelector(".coupon-target-input").value,
+        name: row.dataset.couponName || "이름 없는 쿠폰",
+        type: row.dataset.couponType || "fixed",
+        value: row.dataset.couponValue || "0",
+        target: row.dataset.couponTarget || "전체 수강권",
       }));
     }
 
@@ -1601,10 +1663,8 @@
       return coupon.type === "percent" ? `${percent(coupon.value)}%` : formatMoney(money(coupon.value));
     }
 
-    function updateCouponUnit(row) {
-      const unit = row.querySelector(".coupon-value-unit");
-      const type = row.querySelector(".coupon-type-input").value;
-      unit.textContent = type === "percent" ? "%" : "원";
+    function updateNewCouponUnit() {
+      newCouponUnit.textContent = newCouponType.value === "percent" ? "%" : "원";
     }
 
     function syncPreviewCouponSelect() {
@@ -1622,19 +1682,9 @@
       }
     }
 
-    function syncIssueCouponSelect() {
-      const previousValue = issueCouponSelect.value;
-      const coupons = readCoupons();
-      issueCouponSelect.innerHTML = coupons.map((coupon) => `<option>${coupon.name}</option>`).join("");
-      if ([...issueCouponSelect.options].some((option) => option.value === previousValue)) {
-        issueCouponSelect.value = previousValue;
-      }
-    }
-
     function updatePreview() {
       syncVisibleTicketRows();
       syncCouponTargets();
-      syncIssueCouponSelect();
       syncPreviewCouponSelect();
       const selectedCoupon = readCoupons().find((item) => item.id === previewCouponSelect.value);
       let hasClampedPrice = false;
@@ -1701,18 +1751,40 @@
       updatePreview();
     }
 
-    function bindCouponRow(row) {
-      row.addEventListener("input", updatePreview);
-      row.addEventListener("change", (event) => {
-        if (event.target.classList.contains("coupon-type-input")) updateCouponUnit(row);
-        updatePreview();
-      });
-      row.querySelector("[data-remove-coupon]").addEventListener("click", () => {
-        if (couponRows().length === 1) return;
-        row.remove();
-        updatePreview();
-      });
-      updateCouponUnit(row);
+    function deadlineLabel(value) {
+      if (!value) return "-";
+      const [date] = value.split("T");
+      return date.replaceAll("-", ".");
+    }
+
+    function createCouponListItem({ name, type, value, target, quantity, unlimited, deadline }) {
+      const item = document.createElement("div");
+      item.className = "coupon-list-item";
+      item.dataset.couponRow = "";
+      item.dataset.couponName = name;
+      item.dataset.couponType = type;
+      item.dataset.couponValue = value;
+      item.dataset.couponTarget = target;
+      const coupon = { name, type, value, target };
+      item.innerHTML = `
+        <div>
+          <strong>${name}</strong>
+          <p class="desc">${target} · ${type === "percent" ? "% 할인" : "고정가 할인"} · ${couponValueLabel(coupon)}</p>
+        </div>
+        <div>
+          <div class="coupon-stat-label">사용 횟수</div>
+          <div class="coupon-stat-value">0회</div>
+        </div>
+        <div>
+          <div class="coupon-stat-label">현재 남은 수량</div>
+          <div class="coupon-stat-value">${unlimited ? "무제한" : `${quantity || 0}장`}</div>
+        </div>
+        <div>
+          <div class="coupon-stat-label">마감기한</div>
+          <div class="coupon-stat-value">${deadlineLabel(deadline)}</div>
+        </div>
+      `;
+      return item;
     }
 
     document.querySelectorAll("[data-ticket-row]").forEach((row) => {
@@ -1734,25 +1806,26 @@
       tab.addEventListener("click", () => setView(tab.dataset.viewTab));
     });
 
-    couponRows().forEach(bindCouponRow);
+    newCouponType.addEventListener("change", () => {
+      updateNewCouponUnit();
+      updatePreview();
+    });
     previewCouponSelect.addEventListener("change", updatePreview);
-    addCouponBtn.addEventListener("click", () => {
-      const row = document.createElement("div");
-      row.className = "coupon-row";
-      row.dataset.couponRow = "";
-      row.innerHTML = `
-        <label class="mini-label">쿠폰 이름<input class="coupon-name-input" value="새 쿠폰" /></label>
-        <label class="mini-label">방식<select class="coupon-type-input"><option value="fixed">고정가 할인</option><option value="percent">% 할인</option></select></label>
-        <label class="mini-label">할인값<span class="affix-input"><input class="coupon-value-input" value="5,000" /><span class="affix coupon-value-unit">원</span></span></label>
-        <label class="mini-label">적용 대상<select class="coupon-target-input"><option>전체 수강권</option><option>20주 수강</option><option>평생 소장</option></select></label>
-        <button class="icon-button" type="button" data-remove-coupon>×</button>
-      `;
-      couponList.insertBefore(row, addCouponBtn);
-      bindCouponRow(row);
+    createCouponBtn.addEventListener("click", () => {
+      const name = document.getElementById("newCouponName").value.trim() || "새 쿠폰";
+      const type = document.getElementById("newCouponType").value;
+      const value = document.getElementById("newCouponValue").value;
+      const target = document.getElementById("newCouponTarget").value;
+      const quantity = document.getElementById("newCouponQuantity").value;
+      const unlimited = document.getElementById("newCouponUnlimited").checked;
+      const deadline = document.getElementById("newCouponDeadline").value;
+      couponListBoard.prepend(createCouponListItem({ name, type, value, target, quantity, unlimited, deadline }));
+      document.getElementById("newCouponName").value = "새 프로모션 쿠폰";
       updatePreview();
     });
 
     document.querySelectorAll("[data-ticket-row]").forEach((row) => normalizePriceRow(row));
+    updateNewCouponUnit();
     setView("price");
     updatePreview();
   </script>
